@@ -1,44 +1,66 @@
-#include<iostream>
-#include<algorithm>
-#include<vector>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <limits.h>
 using namespace std;
-class Solution {
+class Solution
+{
 public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        double ans;
-        int i = 0, j = 0, k = nums1.size() - 1, l = nums2.size() - 1;
-        bool flag = (k + l ) % 2 == 0;
-        while(i + j <= k + l){
-            if( i + j + 1 == k + l && flag){
-                double low = (nums1[i], nums2[j]);
-                double high = (nums1[k], nums2[l]);
-                ans = (low + high) /2;
-                return ans;
+    double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
+    {
+        int m = nums1.size(), n = nums2.size();
+        if (m > n)
+        {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int l = 0, r = m, total = m + n + 1;
+        while (l <= r)
+        {
+            int fir = l + (r - l) / 2;
+            int sec = total / 2 - fir;
+            int l1 = INT_MIN, l2 = INT_MIN, r1 = INT_MAX, r2 = INT_MAX;
+            if (fir > 0)
+            {
+                l1 = nums1[fir - 1];
             }
-            else if(i + j == k + l && ! flag){
-                ans =  max(nums1[i], nums2[j]);
-                return ans;
+            if (sec > 0)
+            {
+                l2 = nums2[sec - 1];
             }
-            if(nums1[i] < nums2[j]){
-                i ++;
+            if (fir >= 0 && fir < m)
+            {
+                r1 = nums1[fir];
             }
-            else{j ++;}
-            if(nums1[k]  > nums2[l] && k > 0){
-                k --;
+            if (sec >= 0 && sec < n)
+            {
+                r2 = nums2[sec];
             }
-            else if(l >0){
-                l --;
+            if (l1 <= r2 && l2 <= r1)
+            {
+                if ((n + m) % 2 == 0)
+                {
+                    return (max(l1, l2) + min(r1, r2)) / 2.0;
+                }
+                else
+                    return max(l1, l2);
+            }
+            else if (l1 > l2)
+            {
+                r = fir - 1;
+            }
+            else
+            {
+                l = fir + 1;
             }
         }
         return 0;
     }
 };
 
-
-int main(){ 
+int main()
+{
     Solution x;
-    vector<int> y  = {1,3};
-    vector<int> z = {2};
-    cout<<x.findMedianSortedArrays(y,z);
-
+    vector<int> y = {4};
+    vector<int> z = {5, 6, 7, 8};
+    cout << x.findMedianSortedArrays(y, z);
 }
