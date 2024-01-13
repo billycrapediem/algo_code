@@ -36,7 +36,3 @@ public:
       return next;
     }
 };
-
-int main(){
-
-}
